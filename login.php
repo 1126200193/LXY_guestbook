@@ -179,10 +179,39 @@
             </div>
         </div>
 
+
+        <!--          网页查看留言部分-->
+        <div class="center-mess_1">
+            <div class="row">
+                <div class="col-md-8">
+                    <el-card>
+                        <div slot="header">
+                            <span>查看留言</span>
+                            <i id="rotate" class="el-icon-refresh-right"  style="float:right; padding: 3px 0;font-size:16px;cursor: pointer;" onclick="loading()"></i>
+                        </div>
+                        <div>
+                            <el-tabs :tab-position="tabPosition" style="">
+                                <el-tab-pane label="全部留言">
+                                    <el-table :data="list.slice((currentPage-1)*pagesize,currentPage*pagesize)" border style="width: 100%" v-loading="isLoading">
+                                        <el-table-column prop="uid"  label="楼层"  align="center" width="80px"></el-table-column>
+                                        <el-table-column prop="customname" label="用户姓名"   align="center" width="120px"></el-table-column>
+                                        <el-table-column prop="umsg" label="留言内容"  align="center"></el-table-column>
+                                        <el-table-column prop="utime" :formatter="dateFormat"  label="留言时间"  align="center"  width="180px"></el-table-column>
+                                    </el-table>
+                                    <el-pagination background layout="prev, pager, next" :page-size="pagesize" :total="total" :pager-count="5"  @current-change="changePage">
+                                    </el-pagination>
+                                </el-tab-pane>
+                                <el-tab-pane label="我的留言">
+                                    配置管理
+                                </el-tab-pane>
+                            </el-tabs>
+                        </div>
+                    </el-card>
+                </div>
+            </div>
+        </div>
+
     </div>
-
-</div>
-
 
 </div>
 
@@ -210,6 +239,8 @@
             isLoading:'',
         },
         mounted:function(){
+            this.isloading();
+            this.goinusermess().then(()=> this.returnjson());
         },
         methods:{
             //用户登录方法
@@ -287,7 +318,7 @@
             //时间：2019.11.14
             goinusermess:function(){
                 $.post({
-                    url:'1.php',
+                    url:'manage.php',
                     dataType:'json',
                     data:{'action':'user'},
                     success:(data)=>{
